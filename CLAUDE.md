@@ -9,7 +9,7 @@ hacs.json                              # HACS metadata (root)
 requirements_test.txt                  # Pinned test dependencies
 custom_components/minol/
     __init__.py       async_setup (service registration) + async_setup_entry/unload
-    manifest.json     HA integration manifest; pins minol==1.3.0; requires HA 2026.7+
+    manifest.json     HA integration manifest; pins minol==1.3.0; requires HA 2026.8+ (via hacs.json)
     config_flow.py    Config flow: initial setup + reauthentication
     const.py          DOMAIN, config keys, CONSUMPTION_TYPES, UNIT_MAP
     coordinator.py    MinolDataCoordinator + async_import_historical_data()
