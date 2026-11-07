@@ -11,7 +11,7 @@ A custom [Home Assistant](https://www.home-assistant.io/) integration that fetch
 
 ## Prerequisites
 
-- Home Assistant 2023.1 or newer
+- Home Assistant 2026.7 or newer
 - [HACS](https://hacs.xyz/) (for the recommended installation method)
 - An active Minol Kundenportal account (email + password)
 - Your **Kundennummer** (customer number) — see [Finding your Kundennummer](#finding-your-kundennummer) below
