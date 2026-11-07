@@ -212,13 +212,15 @@ async def test_sensor_device_info_room_and_hub(
     user_num = MOCK_USER_INPUT["user_num"]
     room_name = "Wohnung 1"
 
-    room_device = device_reg.async_get_device(
-        identifiers={(DOMAIN, f"{user_num}_{room_name}")}
+    room_device = device_reg.async_get_device_by_identifier(
+        (DOMAIN, f"{user_num}_{room_name}"), loaded_entry.entry_id
     )
     assert room_device is not None
     assert room_device.name == room_name
 
-    hub_device = device_reg.async_get_device(identifiers={(DOMAIN, user_num)})
+    hub_device = device_reg.async_get_device_by_identifier(
+        (DOMAIN, user_num), loaded_entry.entry_id
+    )
     assert hub_device is not None
     # Room device references the hub as via_device
     assert room_device.via_device_id == hub_device.id

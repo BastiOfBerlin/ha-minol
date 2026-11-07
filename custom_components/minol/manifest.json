@@ -1,6 +1,9 @@
 {
   "domain": "minol",
   "name": "Minol Verbrauchsdaten",
+  "after_dependencies": [
+    "recorder"
+  ],
   "categories": [
     "energy.meters_monitoring",
     "water.meters_leak_detection"
@@ -9,9 +12,6 @@
     "@BastiOfBerlin"
   ],
   "config_flow": true,
-  "dependencies": [
-    "recorder"
-  ],
   "documentation": "https://github.com/BastiOfBerlin/ha-minol",
   "iot_class": "cloud_polling",
   "issue_tracker": "https://github.com/BastiOfBerlin/ha-minol/issues",

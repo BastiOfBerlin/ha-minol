@@ -52,8 +52,8 @@ async def test_setup_entry_success(
     # Hub device created
     from homeassistant.helpers import device_registry as dr
     device_reg = dr.async_get(hass)
-    hub_device = device_reg.async_get_device(
-        identifiers={(DOMAIN, MOCK_USER_INPUT["user_num"])}
+    hub_device = device_reg.async_get_device_by_identifier(
+        (DOMAIN, MOCK_USER_INPUT["user_num"]), mock_config_entry.entry_id
     )
     assert hub_device is not None
     assert hub_device.manufacturer == "Minol"
