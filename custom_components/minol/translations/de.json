@@ -53,19 +53,19 @@
       "message": "Es sind keine Minol-Konten konfiguriert."
     },
     "invalid_month_format": {
-      "message": "Ungültiges Monatsformat '{value}'. Erwartet wird JJJJMM (z. B. 202401)."
+      "message": "Ungültiges Monatsformat {value}. Erwartet wird JJJJMM (z. B. 202401)."
     },
     "invalid_month_value": {
-      "message": "Ungültiger Monat in '{value}'. Der Monat muss zwischen 01 und 12 liegen."
+      "message": "Ungültiger Monat in {value}. Der Monat muss zwischen 01 und 12 liegen."
     },
     "start_after_end": {
-      "message": "Startmonat '{start}' liegt nach Endmonat '{end}'."
+      "message": "Startmonat {start} liegt nach Endmonat {end}."
     },
     "invalid_consumption_type": {
-      "message": "Ungültiger Verbrauchstyp '{value}'. Erlaubt sind: {valid}."
+      "message": "Ungültiger Verbrauchstyp {value}. Erlaubt sind: {valid}."
     },
     "end_in_future": {
-      "message": "Endmonat '{end}' liegt in der Zukunft (aktuell: {current}). Es können nur abgeschlossene Monate importiert werden."
+      "message": "Endmonat {end} liegt in der Zukunft (aktuell: {current}). Es können nur abgeschlossene Monate importiert werden."
     },
     "import_failed": {
       "message": "Statistikimport fehlgeschlagen: {error}"

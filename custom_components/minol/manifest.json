@@ -1,12 +1,18 @@
 {
   "domain": "minol",
   "name": "Minol Verbrauchsdaten",
-  "version": "1.1.0",
-  "homeassistant": "2026.7.0",
+  "codeowners": [
+    "@BastiOfBerlin"
+  ],
   "config_flow": true,
-  "iot_class": "cloud_polling",
-  "requirements": ["minol==1.3.0"],
-  "codeowners": ["@BastiOfBerlin"],
+  "dependencies": [
+    "recorder"
+  ],
   "documentation": "https://codeberg.org/BastiOfBerlin/ha-minol",
-  "issue_tracker": "https://codeberg.org/BastiOfBerlin/ha-minol/issues"
+  "iot_class": "cloud_polling",
+  "issue_tracker": "https://codeberg.org/BastiOfBerlin/ha-minol/issues",
+  "requirements": [
+    "minol==1.3.0"
+  ],
+  "version": "1.1.0"
 }

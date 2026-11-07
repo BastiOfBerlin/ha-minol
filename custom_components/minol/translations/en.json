@@ -53,19 +53,19 @@
       "message": "No Minol accounts are configured."
     },
     "invalid_month_format": {
-      "message": "Invalid month format '{value}'. Expected YYYYMM (e.g., 202401)."
+      "message": "Invalid month format {value}. Expected YYYYMM (e.g., 202401)."
     },
     "invalid_month_value": {
-      "message": "Invalid month in '{value}'. Month must be 01–12."
+      "message": "Invalid month in {value}. Month must be 01–12."
     },
     "start_after_end": {
-      "message": "Start month '{start}' is after end month '{end}'."
+      "message": "Start month {start} is after end month {end}."
     },
     "invalid_consumption_type": {
-      "message": "Invalid consumption type '{value}'. Must be one of: {valid}."
+      "message": "Invalid consumption type {value}. Must be one of: {valid}."
     },
     "end_in_future": {
-      "message": "End month '{end}' is in the future (current: {current}). Only completed months can be imported."
+      "message": "End month {end} is in the future (current: {current}). Only completed months can be imported."
     },
     "import_failed": {
       "message": "Failed to import statistics: {error}"

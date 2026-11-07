@@ -1,1 +1,5 @@
-{"name": "Minol Verbrauchsdaten", "render_readme": true}
+{
+  "name": "Minol Verbrauchsdaten",
+  "render_readme": true,
+  "homeassistant": "2026.7.0"
+}
