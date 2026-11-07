@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Minol Kundenportal",
+        "description": "Geben Sie Ihre Minol-Zugangsdaten ein.",
+        "data": {
+          "email": "E-Mail-Adresse",
+          "password": "Passwort",
+          "user_num": "Kundennummer"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Minol erneut authentifizieren",
+        "description": "Ihre Anmeldedaten sind abgelaufen. Bitte geben Sie Ihr Passwort erneut ein.",
+        "data": {
+          "email": "E-Mail-Adresse",
+          "password": "Passwort"
+        }
+      },
+      "reconfigure": {
+        "title": "Minol neu konfigurieren",
+        "description": "Aktualisieren Sie Ihre Minol-Zugangsdaten.",
+        "data": {
+          "email": "E-Mail-Adresse",
+          "password": "Passwort"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Ungültige Anmeldedaten.",
+      "cannot_connect": "Verbindung zum Minol-Portal fehlgeschlagen. Bitte Netzwerkverbindung prüfen."
+    },
+    "abort": {
+      "already_configured": "Dieses Konto ist bereits eingerichtet.",
+      "reauth_successful": "Erneute Authentifizierung erfolgreich.",
+      "reconfigure_successful": "Neukonfiguration erfolgreich."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Minol Optionen",
+        "description": "Konfigurieren Sie das Abfrageintervall für das Minol-Portal.",
+        "data": {
+          "scan_interval": "Aktualisierungsintervall (Stunden)"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_config_entries": {
+      "message": "Es sind keine Minol-Konten konfiguriert."
+    },
+    "invalid_month_format": {
+      "message": "Ungültiges Monatsformat '{value}'. Erwartet wird JJJJMM (z. B. 202401)."
+    },
+    "invalid_month_value": {
+      "message": "Ungültiger Monat in '{value}'. Der Monat muss zwischen 01 und 12 liegen."
+    },
+    "start_after_end": {
+      "message": "Startmonat '{start}' liegt nach Endmonat '{end}'."
+    },
+    "invalid_consumption_type": {
+      "message": "Ungültiger Verbrauchstyp '{value}'. Erlaubt sind: {valid}."
+    },
+    "end_in_future": {
+      "message": "Endmonat '{end}' liegt in der Zukunft (aktuell: {current}). Es können nur abgeschlossene Monate importiert werden."
+    },
+    "import_failed": {
+      "message": "Statistikimport fehlgeschlagen: {error}"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "heating": {"name": "Heizung"},
+      "warm_water": {"name": "Warmwasser"},
+      "cold_water": {"name": "Kaltwasser"}
+    }
+  }
+}

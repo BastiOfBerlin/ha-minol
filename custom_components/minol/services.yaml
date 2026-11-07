@@ -1,0 +1,44 @@
+import_historical_data:
+  name: Import historical consumption data
+  description: >
+    Fetches historical consumption data from the Minol portal and imports it
+    into Home Assistant long-term statistics. Automatically aligns with any
+    existing statistics (live or previously imported) so no spikes appear in
+    the Energy Dashboard. Idempotent and safe to re-run.
+  fields:
+    start_month:
+      name: Start month
+      description: First month to import (format YYYYMM, e.g. 202401)
+      required: true
+      example: "202401"
+      selector:
+        text:
+    end_month:
+      name: End month
+      description: Last month to import (format YYYYMM, e.g. 202412)
+      required: true
+      example: "202412"
+      selector:
+        text:
+    consumption_types:
+      name: Consumption types
+      description: >
+        Which consumption types to import. If omitted, all available types
+        are imported.
+      required: false
+      selector:
+        select:
+          multiple: true
+          options:
+            - heating
+            - warm_water
+            - cold_water
+    dry_run:
+      name: Dry run
+      description: >
+        Log what would be imported (anchor sum, month count, resulting sum
+        range) without writing anything to the statistics database.
+      required: false
+      default: false
+      selector:
+        boolean:

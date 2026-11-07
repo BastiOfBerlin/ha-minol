@@ -1,0 +1,81 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Minol Kundenportal",
+        "description": "Enter your Minol portal credentials.",
+        "data": {
+          "email": "Email address",
+          "password": "Password",
+          "user_num": "Customer number (Kundennummer)"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reauthenticate Minol",
+        "description": "Your credentials have expired. Please re-enter your password.",
+        "data": {
+          "email": "Email address",
+          "password": "Password"
+        }
+      },
+      "reconfigure": {
+        "title": "Reconfigure Minol",
+        "description": "Update your Minol portal credentials.",
+        "data": {
+          "email": "Email address",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "invalid_auth": "Invalid credentials.",
+      "cannot_connect": "Unable to connect to the Minol portal. Check your network connection."
+    },
+    "abort": {
+      "already_configured": "This account is already configured.",
+      "reauth_successful": "Reauthentication successful.",
+      "reconfigure_successful": "Reconfiguration successful."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Minol Options",
+        "description": "Configure the polling interval for the Minol portal.",
+        "data": {
+          "scan_interval": "Update interval (hours)"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "no_config_entries": {
+      "message": "No Minol accounts are configured."
+    },
+    "invalid_month_format": {
+      "message": "Invalid month format '{value}'. Expected YYYYMM (e.g., 202401)."
+    },
+    "invalid_month_value": {
+      "message": "Invalid month in '{value}'. Month must be 01–12."
+    },
+    "start_after_end": {
+      "message": "Start month '{start}' is after end month '{end}'."
+    },
+    "invalid_consumption_type": {
+      "message": "Invalid consumption type '{value}'. Must be one of: {valid}."
+    },
+    "end_in_future": {
+      "message": "End month '{end}' is in the future (current: {current}). Only completed months can be imported."
+    },
+    "import_failed": {
+      "message": "Failed to import statistics: {error}"
+    }
+  },
+  "entity": {
+    "sensor": {
+      "heating": {"name": "Heating"},
+      "warm_water": {"name": "Warm water"},
+      "cold_water": {"name": "Cold water"}
+    }
+  }
+}
