@@ -8,6 +8,7 @@ from typing import Any
 from homeassistant.components.sensor import SensorEntity, SensorStateClass
 from homeassistant.util import slugify
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
@@ -32,6 +33,13 @@ async def async_setup_entry(
     user_num: str = entry.data[CONF_USER_NUM]
     known_ids: set[str] = set()
 
+    # The hub device is registered in async_setup_entry (__init__.py) before
+    # platforms are forwarded; room devices link to it via its device id.
+    hub_device = dr.async_get(hass).async_get_device_by_identifier(
+        (DOMAIN, user_num), entry.entry_id
+    )
+    hub_device_id = hub_device.id if hub_device else None
+
     @callback
     def _async_add_new_entities() -> None:
         new_entities: list[MinolSensor] = []
@@ -51,6 +59,7 @@ async def async_setup_entry(
                             consumption_type=consumption_type,
                             room_name=room_name,
                             user_num=user_num,
+                            hub_device_id=hub_device_id,
                         )
                     )
         if new_entities:
@@ -86,6 +95,7 @@ class MinolSensor(CoordinatorEntity[MinolDataCoordinator], SensorEntity):
         consumption_type: str,
         room_name: str,
         user_num: str,
+        hub_device_id: str | None = None,
     ) -> None:
         super().__init__(coordinator)
         self._consumption_type = consumption_type
@@ -102,15 +112,13 @@ class MinolSensor(CoordinatorEntity[MinolDataCoordinator], SensorEntity):
         )
         self._attr_device_class = device_class
 
-        # Hub device identifier
-        hub_identifier = (DOMAIN, user_num)
-
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{user_num}_{room_name}")},
             name=room_name,
             manufacturer="Minol",
-            via_device=hub_identifier,
         )
+        if hub_device_id is not None:
+            self._attr_device_info["via_device_id"] = hub_device_id
 
     @property
     def _type_data(self) -> dict[str, Any]:

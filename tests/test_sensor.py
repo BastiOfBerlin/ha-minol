@@ -205,23 +205,39 @@ async def test_sensor_unique_id(
 async def test_sensor_device_info_room_and_hub(
     hass: HomeAssistant, loaded_entry: MockConfigEntry
 ) -> None:
-    """Room device is registered and linked to the hub via via_device."""
+    """Room device is registered and linked to the hub via via_device_id."""
     from homeassistant.helpers import device_registry as dr
     device_reg = dr.async_get(hass)
 
     user_num = MOCK_USER_INPUT["user_num"]
     room_name = "Wohnung 1"
 
-    room_device = device_reg.async_get_device(
-        identifiers={(DOMAIN, f"{user_num}_{room_name}")}
+    room_device = device_reg.async_get_device_by_identifier(
+        (DOMAIN, f"{user_num}_{room_name}"), loaded_entry.entry_id
     )
     assert room_device is not None
     assert room_device.name == room_name
 
-    hub_device = device_reg.async_get_device(identifiers={(DOMAIN, user_num)})
+    hub_device = device_reg.async_get_device_by_identifier(
+        (DOMAIN, user_num), loaded_entry.entry_id
+    )
     assert hub_device is not None
-    # Room device references the hub as via_device
+    # Room device references the hub via via_device_id
     assert room_device.via_device_id == hub_device.id
+
+
+async def test_sensor_device_info_no_deprecated_via_device(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    mock_scraper: MagicMock,
+    mock_session: MagicMock,
+    caplog: pytest.LogCaptureFixture,
+) -> None:
+    """Room devices link to the hub via via_device_id, not deprecated via_device."""
+    await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    assert "deprecated `via_device`" not in caplog.text
 
 
 async def test_sensor_unavailable_when_coordinator_fails(

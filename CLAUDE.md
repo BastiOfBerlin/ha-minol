@@ -4,10 +4,12 @@
 
 ```
 hacs.json                              # HACS metadata (root)
-.github/workflows/validate.yaml        # HACS validation GitHub Action
+.github/workflows/validate.yaml        # HACS + hassfest validation GitHub Action
+.github/workflows/tests.yaml           # pytest (Python 3.14, pytest-homeassistant-custom-component)
+requirements_test.txt                  # Pinned test dependencies
 custom_components/minol/
     __init__.py       async_setup (service registration) + async_setup_entry/unload
-    manifest.json     HA integration manifest; pins minol==1.3.0; requires HA 2026.7+
+    manifest.json     HA integration manifest; pins minol==1.3.0; requires HA 2026.8+ (via hacs.json)
     config_flow.py    Config flow: initial setup + reauthentication
     const.py          DOMAIN, config keys, CONSUMPTION_TYPES, UNIT_MAP
     coordinator.py    MinolDataCoordinator + async_import_historical_data()
@@ -189,9 +191,6 @@ python -m minol --help
 
 These items cannot be resolved in-repo and require manual action:
 
-- **GitHub mirror**: HACS default repository inclusion requires GitHub hosting. The repo currently
-  lives on Codeberg. Manual HACS install via "Custom repositories" works from any git host.
-  Consider creating a GitHub mirror for default catalog eligibility.
 - **First release**: Create a tagged release (e.g. `v1.0.0`) on the hosting platform so HACS
   can offer version-based installs to users.
 
