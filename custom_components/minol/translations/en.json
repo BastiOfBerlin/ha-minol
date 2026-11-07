@@ -71,6 +71,11 @@
       "message": "Failed to import statistics: {error}"
     }
   },
+  "device": {
+    "heating": {"name": "Heat cost allocator {room}"},
+    "warm_water": {"name": "Hot water meter {room}"},
+    "cold_water": {"name": "Cold water meter {room}"}
+  },
   "entity": {
     "sensor": {
       "heating": {"name": "Heating"},

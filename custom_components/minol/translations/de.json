@@ -71,6 +71,11 @@
       "message": "Statistikimport fehlgeschlagen: {error}"
     }
   },
+  "device": {
+    "heating": {"name": "Heizkostenverteiler {room}"},
+    "warm_water": {"name": "Warmwasserzähler {room}"},
+    "cold_water": {"name": "Kaltwasserzähler {room}"}
+  },
   "entity": {
     "sensor": {
       "heating": {"name": "Heizung"},

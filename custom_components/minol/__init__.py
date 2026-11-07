@@ -28,7 +28,7 @@ from .const import (
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
 )
-from .coordinator import MinolDataCoordinator
+from .coordinator import MinolDataCoordinator, meter_device_identifier
 from .session import create_session
 
 _LOGGER = logging.getLogger(__name__)
@@ -189,17 +189,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: MinolConfigEntry) -> boo
 
     @callback
     def _async_remove_stale_devices() -> None:
-        current_rooms: set[str] = set()
-        for type_data in coordinator.data.values():
+        current_meters: set[str] = set()
+        for consumption_type, type_data in coordinator.data.items():
             if not isinstance(type_data, dict):
                 continue
             for room_name in type_data.get("rooms", {}):
-                current_rooms.add(f"{user_num}_{room_name}")
+                current_meters.add(
+                    meter_device_identifier(user_num, consumption_type, room_name)
+                )
 
         device_reg = dr.async_get(hass)
         for device in dr.async_entries_for_config_entry(device_reg, entry.entry_id):
             for domain, identifier in device.identifiers:
-                if domain == DOMAIN and identifier != user_num and identifier not in current_rooms:
+                if domain == DOMAIN and identifier != user_num and identifier not in current_meters:
                     device_reg.async_update_device(
                         device.id, remove_config_entry_id=entry.entry_id
                     )

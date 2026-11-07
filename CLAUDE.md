@@ -121,10 +121,25 @@ the Energy Dashboard. `TOTAL_INCREASING` would be wrong here.
 ## Device hierarchy
 
 ```
-Hub device:  identifiers={(DOMAIN, user_num)}           — DeviceEntryType.SERVICE
-Room device: identifiers={(DOMAIN, f"{user_num}_{room_name}")}  — via_device → hub
-Sensors:     attached to room device
+Hub device:   identifiers={(DOMAIN, user_num)}                                   — DeviceEntryType.SERVICE
+Meter device: identifiers={(DOMAIN, f"{user_num}_{room_name}_{consumption_type}")} — via_device → hub
+Sensor:       one per meter device, _attr_name = None (uses the device name)
 ```
+
+Meter device names are translated via `DeviceInfo(translation_key=consumption_type,
+translation_placeholders={"room": room_name})` → `strings.json` `device.<type>.name`
+(e.g. "Heizkostenverteiler {room}"). `serial_number` comes from the portal's `"device"`
+field. **No `suggested_area`**: since HA 2026.x new entity IDs are built from
+area + device name without deduplication, so `sensor.flur_kaltwasserzahler_flur` would result.
+
+The identifier is built by `meter_device_identifier()` in `coordinator.py`, which is shared
+with the stale-device cleanup in `__init__.py`. It is **deliberately not keyed on the meter
+serial**: meters get swapped when their calibration expires, and a serial-based identifier
+would let the stale-device cleanup remove the device together with its entity.
+
+Up to 1.1.x there was one device per room (`f"{user_num}_{room_name}"`). Those are removed
+by the stale-device cleanup on the first coordinator update after upgrading; the entities
+move to the meter devices automatically because their unique_ids are unchanged.
 
 ## Unique IDs
 
@@ -142,7 +157,8 @@ async_setup_entry→  await scraper.login(session_data={})   initial auth, fills
 coordinator      →  every N hours (default 6, configurable via options): await scraper.login(session_data) + await scraper.fetch_all(...)
                      timeline_start = ~13 months ago, timeline_end = current month
                      session_data lives in entry.runtime_data (MinolRuntimeData)
-sensor           →  reads coordinator.data, shows latest non-null monthly value
+sensor           →  reads coordinator.data, shows latest non-null monthly value;
+                     meter_serial attribute = portal's "device" field
 service          →  import_historical_data(start, end, consumption_types?, dry_run?): fetches
                      range, calls async_import_historical_data() (backward-anchor accumulation)
 ```

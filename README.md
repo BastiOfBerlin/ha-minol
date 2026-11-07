@@ -5,7 +5,7 @@ A custom [Home Assistant](https://www.home-assistant.io/) integration that fetch
 ## Features
 
 - Sensors for **heating** (kWh), **warm water** (m³), and **cold water** (m³)
-- One sensor per room and consumption type, organised under room devices
+- One device per meter (room × consumption type), named after the meter type and room — e.g. *Heizkostenverteiler Wohnzimmer*, *Kaltwasserzähler Flur*
 - Configurable polling interval (default: every 6 hours)
 - On-demand **historical statistics import** to backfill the Energy Dashboard
 
@@ -76,15 +76,24 @@ Each sensor also exposes two extra attributes:
 
 ### Device hierarchy
 
+Each meter is its own device. The device name combines the meter type and the room
+name from the portal (translated; German shown here), the meter's serial number is
+stored as the device serial number. The sensor is the device's main entity and carries
+the device name. Devices are not assigned to areas automatically — the room is already
+part of the name; assign areas yourself if you use them.
+
 ```
-Minol <Kundennummer>          (hub — service device)
-├── Wohnung 1
-│   ├── Heating               sensor.wohnung_1_heating
-│   ├── Warm water            sensor.wohnung_1_warm_water
-│   └── Cold water            sensor.wohnung_1_cold_water
-└── Wohnung 2
-    └── ...
+Minol <Kundennummer>                  (hub — service device)
+├── Heizkostenverteiler Wohnzimmer    sensor.heizkostenverteiler_wohnzimmer
+├── Heizkostenverteiler Bad           sensor.heizkostenverteiler_bad
+├── Warmwasserzähler Flur             sensor.warmwasserzahler_flur
+└── Kaltwasserzähler Flur             sensor.kaltwasserzahler_flur
 ```
+
+> **Upgrading from 1.1.x:** earlier versions grouped sensors under one device per room.
+> On upgrade, each sensor moves to its new meter device; its entity ID, history and
+> imported statistics are kept. The old room devices are removed on the next poll.
+> Custom names or areas you had set on the old room devices are not carried over.
 
 ## Energy Dashboard
 

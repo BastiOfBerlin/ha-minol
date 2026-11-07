@@ -202,28 +202,100 @@ async def test_sensor_unique_id(
     assert entity_id is not None
 
 
-async def test_sensor_device_info_room_and_hub(
+async def test_sensor_device_per_meter_linked_to_hub(
     hass: HomeAssistant, loaded_entry: MockConfigEntry
 ) -> None:
-    """Room device is registered and linked to the hub via via_device_id."""
+    """Each room x type gets its own meter device, linked to the hub."""
     from homeassistant.helpers import device_registry as dr
     device_reg = dr.async_get(hass)
 
     user_num = MOCK_USER_INPUT["user_num"]
     room_name = "Wohnung 1"
 
-    room_device = device_reg.async_get_device_by_identifier(
-        (DOMAIN, f"{user_num}_{room_name}"), loaded_entry.entry_id
-    )
-    assert room_device is not None
-    assert room_device.name == room_name
-
     hub_device = device_reg.async_get_device_by_identifier(
         (DOMAIN, user_num), loaded_entry.entry_id
     )
     assert hub_device is not None
-    # Room device references the hub via via_device_id
-    assert room_device.via_device_id == hub_device.id
+
+    expected = {
+        "heating": ("Heat cost allocator Wohnung 1", "04B648FD82639440"),
+        "warm_water": ("Hot water meter Wohnung 1", "04B648FD82639441"),
+        "cold_water": ("Cold water meter Wohnung 1", "04B648FD82639442"),
+    }
+    for consumption_type, (name, serial) in expected.items():
+        device = device_reg.async_get_device_by_identifier(
+            (DOMAIN, f"{user_num}_{room_name}_{consumption_type}"),
+            loaded_entry.entry_id,
+        )
+        assert device is not None, consumption_type
+        assert device.name == name
+        assert device.serial_number == serial
+        assert device.manufacturer == "Minol"
+        assert device.via_device_id == hub_device.id
+        # No suggested_area: HA would prefix entity IDs with the area name,
+        # duplicating the room that is already part of the device name.
+        assert device.area_id is None
+
+
+async def test_sensor_entity_uses_device_name(
+    hass: HomeAssistant, loaded_entry: MockConfigEntry
+) -> None:
+    """The sensor is the device's main feature: friendly name == device name."""
+    state = _get_sensor(hass, "cold_water")
+    assert state.attributes["friendly_name"] == "Cold water meter Wohnung 1"
+
+
+async def test_sensor_extra_attributes_meter_serial_value(
+    hass: HomeAssistant, loaded_entry: MockConfigEntry
+) -> None:
+    """meter_serial is taken from the portal's "device" field."""
+    state = _get_sensor(hass, "heating")
+    assert state.attributes["meter_serial"] == "04B648FD82639440"
+
+
+async def test_legacy_room_device_is_removed(
+    hass: HomeAssistant,
+    mock_config_entry: MockConfigEntry,
+    mock_scraper: MagicMock,
+    mock_session: MagicMock,
+) -> None:
+    """Room devices from earlier versions are dropped; entities keep their IDs."""
+    from homeassistant.helpers import device_registry as dr
+    from homeassistant.helpers import entity_registry as er
+
+    user_num = MOCK_USER_INPUT["user_num"]
+    device_reg = dr.async_get(hass)
+    entity_reg = er.async_get(hass)
+
+    legacy_device = device_reg.async_get_or_create(
+        config_entry_id=mock_config_entry.entry_id,
+        identifiers={(DOMAIN, f"{user_num}_Wohnung 1")},
+        name="Wohnung 1",
+    )
+    legacy_entity = entity_reg.async_get_or_create(
+        "sensor",
+        DOMAIN,
+        f"{user_num}_wohnung_1_heating",
+        config_entry=mock_config_entry,
+        device_id=legacy_device.id,
+        suggested_object_id="wohnung_1_heating",
+    )
+
+    await hass.config_entries.async_setup(mock_config_entry.entry_id)
+    await hass.async_block_till_done()
+
+    # Entity moved to the new meter device and kept its entity_id
+    moved = entity_reg.async_get(legacy_entity.entity_id)
+    assert moved is not None
+    assert moved.entity_id == "sensor.wohnung_1_heating"
+    assert moved.device_id != legacy_device.id
+
+    # The next coordinator update removes the now-empty legacy room device
+    coordinator = mock_config_entry.runtime_data.coordinator
+    await coordinator.async_refresh()
+    await hass.async_block_till_done()
+    assert device_reg.async_get(legacy_device.id) is None
+    assert entity_reg.async_get(legacy_entity.entity_id) is not None
 
 
 async def test_sensor_device_info_no_deprecated_via_device(

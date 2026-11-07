@@ -23,6 +23,16 @@ if TYPE_CHECKING:
 _LOGGER = logging.getLogger(__name__)
 
 
+def meter_device_identifier(user_num: str, consumption_type: str, room_name: str) -> str:
+    """Return the device-registry identifier for one meter (room x type).
+
+    Deliberately not keyed on the meter serial: meters are swapped when their
+    calibration expires, and a serial-based identifier would make the stale
+    device cleanup remove the device together with its entity.
+    """
+    return f"{user_num}_{room_name}_{consumption_type}"
+
+
 class MinolDataCoordinator(DataUpdateCoordinator[dict[str, Any]]):
     """Coordinator that polls the Minol portal at a configurable interval (default 6 hours)."""
 

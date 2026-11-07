@@ -16,7 +16,7 @@ from homeassistant.util.dt import as_utc
 
 from . import MinolConfigEntry
 from .const import CONF_USER_NUM, CONSUMPTION_TYPES, DOMAIN, UNIT_MAP
-from .coordinator import MinolDataCoordinator
+from .coordinator import MinolDataCoordinator, meter_device_identifier
 
 PARALLEL_UPDATES = 0
 
@@ -85,6 +85,10 @@ class MinolSensor(CoordinatorEntity[MinolDataCoordinator], SensorEntity):
     """Represents one consumption meter for one room."""
 
     _attr_has_entity_name = True
+    # The meter device is named after its type and room
+    # ("Heizkostenverteiler Wohnzimmer"), so the entity is its main feature
+    # and uses the device name as-is.
+    _attr_name = None
     _attr_state_class = SensorStateClass.TOTAL
     _attr_suggested_display_precision = 2
 
@@ -112,10 +116,18 @@ class MinolSensor(CoordinatorEntity[MinolDataCoordinator], SensorEntity):
         )
         self._attr_device_class = device_class
 
+        serial = self._room_data.get("device") or None
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, f"{user_num}_{room_name}")},
-            name=room_name,
+            identifiers={
+                (
+                    DOMAIN,
+                    meter_device_identifier(user_num, consumption_type, room_name),
+                )
+            },
+            translation_key=consumption_type,
+            translation_placeholders={"room": room_name},
             manufacturer="Minol",
+            serial_number=serial,
         )
         if hub_device_id is not None:
             self._attr_device_info["via_device_id"] = hub_device_id
@@ -169,6 +181,6 @@ class MinolSensor(CoordinatorEntity[MinolDataCoordinator], SensorEntity):
     def extra_state_attributes(self) -> dict[str, Any]:
         room = self._room_data
         return {
-            "meter_serial": room.get("meter_serial"),
+            "meter_serial": room.get("device"),
             "monthly": dict(room.get("monthly", {})),
         }
