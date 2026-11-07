@@ -1,6 +1,10 @@
 {
   "domain": "minol",
   "name": "Minol Verbrauchsdaten",
+  "categories": [
+    "energy.meters_monitoring",
+    "water.meters_leak_detection"
+  ],
   "codeowners": [
     "@BastiOfBerlin"
   ],
