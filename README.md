@@ -22,7 +22,7 @@ A custom [Home Assistant](https://www.home-assistant.io/) integration that fetch
 
 1. Open HACS in your Home Assistant sidebar.
 2. Go to **Integrations** → click the three-dot menu → **Custom repositories**.
-3. Add `https://codeberg.org/BastiOfBerlin/ha-minol` as an **Integration**.
+3. Add `https://github.com/BastiOfBerlin/ha-minol` as an **Integration**.
 4. Search for **Minol Verbrauchsdaten** and click **Download**.
 5. Restart Home Assistant.
 
@@ -159,7 +159,7 @@ Run the `minol.import_historical_data` action first (see [Energy Dashboard](#ene
 
 ## Contributing
 
-Issues and pull requests are welcome at the [Codeberg repository](https://codeberg.org/BastiOfBerlin/ha-minol).
+Issues and pull requests are welcome at the [GitHub repository](https://github.com/BastiOfBerlin/ha-minol).
 
 ## License
 
